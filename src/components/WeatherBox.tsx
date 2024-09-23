@@ -1,12 +1,16 @@
-import { useEffect,useState } from "react";
+import React, { useEffect,useState } from "react";
 
 import { IoSearch } from "react-icons/io5";
 import { TbWind } from "react-icons/tb";
 import { WiHumidity } from "react-icons/wi";
 
 
+import { IoPartlySunny } from "react-icons/io5";
 import { MdSunny } from "react-icons/md";
 import { IoRainy } from "react-icons/io5";
+import { IoCloudy } from "react-icons/io5";
+import { BsCloudFogFill } from "react-icons/bs";
+
 
 
 type weatherDataProps={
@@ -29,7 +33,7 @@ function WeatherBox() {
     const response=await fetch(url)
     const data=await response.json()
     console.log(data)
-    const temp:number=data?.main.temp 
+    const temp:number=data?.main.temp
     temp.toFixed(0)
     setweatherData({
       temp:temp,
@@ -40,24 +44,59 @@ function WeatherBox() {
       weathericon:data?.weather[0].icon,
     })
   }
+  
+  const weatherName:string = weatherData?.weatherType ?? "lol"
+
+  const iconChanger=(weather:string )=>{
+    let iconElement:React.ReactNode;
+
+    switch(weather.toLowerCase()){
+      case "sunny":
+      iconElement=<MdSunny className="size-40 text-yellow-400"/>
+      break;
+      case "rain":
+      iconElement=<IoRainy className="size-40 text-blue-950"/>
+      break;
+      case "clear":
+      iconElement=<MdSunny className="size-40 text-yellow-400"/>
+      break;
+      case "clouds":
+      iconElement=<IoCloudy className="size-40 text-gray-400"/>
+      break;
+      case "mist":
+      iconElement=<BsCloudFogFill className="size-40 text-gray-500"/>
+      break;
+      case "haze":
+      iconElement=<BsCloudFogFill className="size-40 text-gray-500"/>
+      break;
+      default:
+        iconElement=<IoPartlySunny className="size-40 text-yellow-400"/>
+    }
+
+    return(
+      <span className="icon flex items-center justify-center">
+        {iconElement}
+      </span>
+    )
+  }
 
   useEffect(() => {
-    WeatherSearch("delhi")
+    WeatherSearch("spain")
   }, [])
   
 
 
   return (
-    <div className="border border-gray-400 mx-auto container bg-emerald-700  my-7 px-4 w-[30vw] rounded-lg">
+    <div className="border  mx-auto container bg-blue-500  my-7 px-4 w-[26vw] rounded-lg border-gray-700">
       <div className="flex space-x-3 justify-center py-4">
-        <input type="text" placeholder="search" className="border-2 border-black rounded-full px-2 py-1 w-3/4" name="searchBar" id="" />
-        <button title="search" className="btn bg-white border-2 border-black  rounded-full px-2 " ><IoSearch /></button>
+        <input type="text" placeholder="search" className="border border-black rounded-full px-2 py-1 w-3/4" name="searchBar" id="" />
+        <button title="search" className="btn bg-white border border-black  rounded-full px-2 hover:bg-gray-300" ><IoSearch /></button>
       </div>
-      <h3 className="mb-2 text-xl text-center">{weatherData?.location}</h3>
-      <div className="flex justify-center">
-      <img src="/" alt="hello" className="w-40 h-40 bg-pink-300 "/>
+      <h3 className="mb-2 text-white font-semibold text-3xl text-center">{weatherData?.location}</h3>
+      <div className="flex justify-center w-40 h-40 mx-auto">
+        {iconChanger(weatherName)}
       </div>
-      <h3 className="text-center font-semibold text-2xl text-white my-2">{weatherData?.weatherType}</h3>
+      <h3 className="text-center font-semibold text-3xl text-white my-2">{weatherData?.weatherType}</h3>
       <h1 className="text-6xl  text-white text-center">{weatherData?.temp}°c</h1>
       <div className="flex justify-evenly  my-4">
         <div className="">
@@ -74,7 +113,6 @@ function WeatherBox() {
             <p className="text-white text-center ">Wind Speed</p>
             <p className="text-white text-center">{weatherData?.windSpeed} Km/h</p>
         </div>
-
       </div>
     </div>
   )
