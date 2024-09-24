@@ -11,6 +11,7 @@ import { IoRainy } from "react-icons/io5";
 import { IoCloudy } from "react-icons/io5";
 import { BsCloudFogFill } from "react-icons/bs";
 
+import { FiLoader } from "react-icons/fi";
 
 
 type weatherDataProps={
@@ -26,6 +27,7 @@ type weatherDataProps={
 function WeatherBox() {
   
   const [weatherData, setweatherData] = useState<null | weatherDataProps>(null)
+  const [isloading, setisloading]= useState<boolean>(false)
 
   const WeatherSearch = async(city:string)=>{
     const api_key:string='f6ff443fbb53018cf4727e7987baf0eb'
@@ -43,6 +45,7 @@ function WeatherBox() {
       weatherType:data?.weather[0].main,
       weathericon:data?.weather[0].icon,
     })
+    setisloading(true)
   }
   
   const weatherName:string = weatherData?.weatherType ?? "lol"
@@ -81,17 +84,20 @@ function WeatherBox() {
   }
 
   useEffect(() => {
-    WeatherSearch("spain")
+    WeatherSearch("delhi")
   }, [])
   
 
 
   return (
-    <div className="border  mx-auto container bg-blue-500  my-7 px-4 w-[26vw] rounded-lg border-gray-700">
+    <div className="border  mx-auto container bg-blue-500  my-7 px-4 min-w-[300px] w-[26vw] rounded-lg border-gray-700 h-[496px] ">
       <div className="flex space-x-3 justify-center py-4">
         <input type="text" placeholder="search" className="border border-black rounded-full px-2 py-1 w-3/4" name="searchBar" id="" />
         <button title="search" className="btn bg-white border border-black  rounded-full px-2 hover:bg-gray-300" ><IoSearch /></button>
       </div>
+
+    {weatherData && isloading? (
+      <>
       <h3 className="mb-2 text-white font-semibold text-3xl text-center">{weatherData?.location}</h3>
       <div className="flex justify-center w-40 h-40 mx-auto">
         {iconChanger(weatherName)}
@@ -111,10 +117,20 @@ function WeatherBox() {
             <TbWind className="size-8 text-white" />
             </div>
             <p className="text-white text-center ">Wind Speed</p>
-            <p className="text-white text-center">{weatherData?.windSpeed} Km/h</p>
+            <p className="text-white text-center ">{weatherData?.windSpeed} Km/h</p>
         </div>
       </div>
-    </div>
+      </>
+    ):(
+      <div className="flex h-[430px] items-center justify-center">
+        <div className="">
+        <FiLoader className="size-28 animate-spin" />
+        <p className="text-center">Loading</p>
+        </div>
+      </div>
+    )
+  }
+  </div>
   )
 }
 
