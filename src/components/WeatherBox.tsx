@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from "react";
+import React, { useState,useEffect } from "react";
 
 import { IoSearch } from "react-icons/io5";
 import { TbWind } from "react-icons/tb";
@@ -26,10 +26,18 @@ type weatherDataProps={
 
 function WeatherBox() {
   
+
   const [weatherData, setweatherData] = useState<null | weatherDataProps>(null)
   const [isloading, setisloading]= useState<boolean>(false)
 
+  const [searchCity,setsearchCity]=useState<string>("")
+
   const WeatherSearch = async(city:string)=>{
+    if(city===""){
+      return(
+        alert("enter a city name")
+      )
+    }
     const api_key:string='f6ff443fbb53018cf4727e7987baf0eb'
     const url:string =`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`
     const response=await fetch(url)
@@ -92,8 +100,8 @@ function WeatherBox() {
   return (
     <div className="border  mx-auto container bg-blue-500  my-7 px-4 min-w-[300px] w-[26vw] rounded-lg border-gray-700 h-[496px] ">
       <div className="flex space-x-3 justify-center py-4">
-        <input type="text" placeholder="search" className="border border-black rounded-full px-2 py-1 w-3/4" name="searchBar" id="" />
-        <button title="search" className="btn bg-white border border-black  rounded-full px-2 hover:bg-gray-300" ><IoSearch /></button>
+        <input type="text" value={searchCity} onChange={(e)=>setsearchCity(e.target.value)}  placeholder="search" className="border border-black rounded-full px-2 py-1 w-3/4" name="searchBar" id="" />
+        <button title="search" onClick={()=>WeatherSearch(searchCity)} className="btn bg-white border border-black  rounded-full px-2 hover:bg-gray-300" ><IoSearch /></button>
       </div>
 
     {weatherData && isloading? (
