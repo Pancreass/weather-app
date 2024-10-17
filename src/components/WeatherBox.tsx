@@ -10,6 +10,7 @@ import { MdSunny } from "react-icons/md";
 import { IoRainy } from "react-icons/io5";
 import { IoCloudy } from "react-icons/io5";
 import { BsCloudFogFill } from "react-icons/bs";
+import { MdThunderstorm } from "react-icons/md";
 
 import { FiLoader } from "react-icons/fi";
 
@@ -38,6 +39,8 @@ function WeatherBox() {
         alert("enter a city name")
       )
     }
+    setisloading(false)
+    try{
     const api_key:string='f6ff443fbb53018cf4727e7987baf0eb'
     const url:string =`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${api_key}`
     const response=await fetch(url)
@@ -55,6 +58,13 @@ function WeatherBox() {
     })
     setisloading(true)
   }
+  catch(error){
+    console.log(error)
+    return(
+      alert("enter a valid city name")
+    )
+  }
+}
   
   const weatherName:string = weatherData?.weatherType ?? "lol"
 
@@ -79,6 +89,9 @@ function WeatherBox() {
       break;
       case "haze":
       iconElement=<BsCloudFogFill className="size-40 text-gray-500"/>
+      break;
+      case "thunderstorm":
+      iconElement=<MdThunderstorm className="size-40 text-purple-900"/>
       break;
       default:
         iconElement=<IoPartlySunny className="size-40 text-yellow-400"/>
